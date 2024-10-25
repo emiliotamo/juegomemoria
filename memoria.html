@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: repeat(4, 100px);
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    background-color: #ddd;
+    border: 1px solid #333;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: transparent;
+    user-select: none;
+}
+
+.card.flipped {
+    background-color: #ff6347;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <body>
+        <h1>Juego de Memoria</h1>
+        <div class="game-board">
+            <div class="card" data-name="🍎"></div>
+            <div class="card" data-name="🍌"></div>
+            <div class="card" data-name="🍇"></div>
+            <div class="card" data-name="🍉"></div>
+            <div class="card" data-name="🍓"></div>
+            <div class="card" data-name="🍒"></div>
+            <div class="card" data-name="🍍"></div>
+            <div class="card" data-name="🍑"></div>
+            <div class="card" data-name="🍎"></div>
+            <div class="card" data-name="🍌"></div>
+            <div class="card" data-name="🍇"></div>
+            <div class="card" data-name="🍉"></div>
+            <div class="card" data-name="🍓"></div>
+            <div class="card" data-name="🍒"></div>
+            <div class="card" data-name="🍍"></div>
+            <div class="card" data-name="🍑"></div>
+        </div>
+    
+        
+    <script>
+        const cards = document.querySelectorAll('.card');
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        // Barajar las cartas al iniciar el juego
+        (function shuffle() {
+            cards.forEach(card => {
+                let randomPos = Math.floor(Math.random() * 16);
+                card.style.order = randomPos;
+                let innerCard = document.createElement("div");
+                innerCard.classList.add("card-inner");
+
+                let front = document.createElement("div");
+                front.classList.add("card-front");
+                front.textContent = card.getAttribute('data-name');
+
+                let back = document.createElement("div");
+                back.classList.add("card-back");
+
+                innerCard.appendChild(front);
+                innerCard.appendChild(back);
+                card.appendChild(innerCard);
+            });
+        })();
+
+        function flipCard() {
+            if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
+                this.classList.add('flipped');
+                flippedCards.push(this);
+
+                if (flippedCards.length === 2) {
+                    checkForMatch();
+                }
+            }
+        }
+
+        function checkForMatch() {
+            const [card1, card2] = flippedCards;
+            if (card1.getAttribute('data-name') === card2.getAttribute('data-name')) {
+                matchedPairs++;
+                flippedCards = [];
+                if (matchedPairs === 8) {
+                    setTimeout(() => alert('¡Has ganado!'), 500);
+                }
+            } else {
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
+        }
+
+        cards.forEach(card => card.addEventListener('click', flipCard));
+    </script>
+</body>
+</html>
